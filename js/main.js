@@ -21,6 +21,7 @@
 
   // Highlight the nav link for the section in view
   const sections = links
+    .filter((link) => link.getAttribute('href').startsWith('#'))
     .map((link) => document.querySelector(link.getAttribute('href')))
     .filter(Boolean);
   const spy = new IntersectionObserver((entries) => {
@@ -45,7 +46,7 @@
   // Enquiry form: no backend, so hand the message to the visitor's mail client
   const form = document.getElementById('enquiryForm');
   const status = document.getElementById('formStatus');
-  form.addEventListener('submit', (e) => {
+  if (form) form.addEventListener('submit', (e) => {
     e.preventDefault();
     if (!form.checkValidity()) {
       status.textContent = 'Please fill in your name, contact details and message.';
@@ -65,6 +66,27 @@
       + `&body=${encodeURIComponent(body)}`;
     status.textContent = 'Opening your email app to send the enquiry…';
   });
+
+  // Work page: filter projects by category
+  const filters = [...document.querySelectorAll('.chip[data-filter]')];
+  const projects = [...document.querySelectorAll('[data-category]')];
+  const empty = document.getElementById('projectsEmpty');
+  const count = document.getElementById('projectsCount');
+  filters.forEach((chip) => chip.addEventListener('click', () => {
+    const filter = chip.dataset.filter;
+    filters.forEach((c) => {
+      c.classList.toggle('is-active', c === chip);
+      c.setAttribute('aria-pressed', String(c === chip));
+    });
+    let shown = 0;
+    projects.forEach((project) => {
+      const match = filter === 'all' || project.dataset.category === filter;
+      project.hidden = !match;
+      if (match) { project.classList.add('is-visible'); shown += 1; }
+    });
+    if (empty) empty.hidden = shown > 0;
+    if (count) count.textContent = `${shown} ${shown === 1 ? 'project' : 'projects'}`;
+  }));
 
   document.getElementById('year').textContent = new Date().getFullYear();
 })();
