@@ -45,7 +45,7 @@ body {
 
 body.menu-open { overflow: hidden; }
 
-img { display: block; max-width: 100%; }
+img { display: block; max-width: 100%; height: auto; }
 a { color: inherit; text-decoration: none; }
 ul, ol { margin: 0; padding: 0; list-style: none; }
 h1, h2, h3, p, figure, blockquote { margin: 0; }
@@ -54,6 +54,20 @@ button, input, textarea { font: inherit; color: inherit; }
 
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .icon { width: 18px; height: 18px; flex: none; }
+
+.skip-link {
+  position: absolute;
+  left: 16px; top: -60px;
+  z-index: 100;
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  transition: top .2s ease;
+}
+.skip-link:focus { top: 12px; }
 
 .sr-only {
   position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
@@ -506,7 +520,7 @@ a:hover > * > .arrow, a:hover > .arrow, a:hover .arrow { background: rgba(247, 1
 .work-card img { aspect-ratio: 2.35 / 1; border-radius: 8px; }
 .work-card > img { overflow: hidden; }
 .work-card__body { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 2px 0; }
-.work-card h3 { font-size: 14px; font-weight: 600; }
+.work-card h2, .work-card h3 { font-size: 14px; font-weight: 600; }
 .work-card p { margin-top: 2px; font-size: 11.500px; color: var(--muted); }
 .work-card p span { margin: 0 6px; opacity: .6; }
 
@@ -644,8 +658,8 @@ a:hover > * > .arrow, a:hover > .arrow, a:hover .arrow { background: rgba(247, 1
 
 /* ---------- Reveal ---------- */
 
-.reveal { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s ease; }
-.reveal.is-visible { opacity: 1; transform: none; }
+.reveal { transition: opacity .7s ease, transform .7s ease; }
+.js .reveal:not(.is-visible) { opacity: 0; transform: translateY(24px); }
 .cards .reveal:nth-child(2), .stats__grid .reveal:nth-child(2) { transition-delay: .08s; }
 .cards .reveal:nth-child(3), .stats__grid .reveal:nth-child(3) { transition-delay: .16s; }
 .cards .reveal:nth-child(4), .stats__grid .reveal:nth-child(4) { transition-delay: .24s; }
@@ -653,7 +667,7 @@ a:hover > * > .arrow, a:hover > .arrow, a:hover .arrow { background: rgba(247, 1
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  .reveal { opacity: 1; transform: none; }
+  .js .reveal:not(.is-visible) { opacity: 1; transform: none; }
 }
 
 /* ==========================================================================
